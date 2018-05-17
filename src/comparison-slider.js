@@ -35,81 +35,83 @@
         this.initOnResize();
 
     };
-    // Shortcut
-    var SliderPrototype = Slider.prototype;
-    /**
-     * Returns a rect css declaration from width and height
-     * @param {*} w width
-     * @param {*} h height
-     */
-    SliderPrototype.getRect = function (w, h) {
-        return "rect(0px, " + w + "px, " + h + "px, 0px)";
-    };
 
-    /**
-     * Initialize dragging events for desktop and touch devices
-     */
-    SliderPrototype.initDraggerEvents = function () {
-        var slider = this,
-            isDown = 0, // mouse is down or touch is down
-            X = null;
-        
-        function resetDown(e) {
-            isDown = 0;
-        }
-        // get's clientX value from a desktop or touch event
-        function getClientX(e){
-            if(e.clientX || e.clientX === 0) return e.clientX;
-            else if (e.touches && e.touches[0]) return e.touches[0].clientX;
-        }
-
-        // Drag start event handler
-        function start(e) {
-           X = getClientX(e);
-           isDown = 1;
-        }
-        // Dragging event handler
-        function move(e){
-            e.preventDefault(); // prevent screen from moving on touch devices
-            if (isDown) {
-                var clientX = getClientX(e);
-                this.style.left = parseInt(this.style.left) + (clientX - X) + "px";
-                X = clientX;
-                var w = this.getBoundingClientRect().width / 2 + parseInt(this.style.left),
-                    h = this.getBoundingClientRect().height;
-                this.nextElementSibling.style.clip = slider.getRect(w, h);
+    // Define prototype methods
+    Slider.prototype  = {
+        /**
+         * Returns a rect css declaration from width and height
+         * @param {*} w width
+         * @param {*} h height
+         */
+        getRect: function (w, h) {
+            return "rect(0px, " + w + "px, " + h + "px, 0px)";
+        },
+        /**
+         * Initialize dragging events for desktop and touch devices
+         */
+        initDraggerEvents: initDraggerEvents = function () {
+            var slider = this,
+                isDown = 0, // mouse is down or touch is down
+                X = null;
+            
+            function resetDown(e) {
+                isDown = 0;
             }
+            // get's clientX value from a desktop or touch event
+            function getClientX(e){
+                if(e.clientX || e.clientX === 0) return e.clientX;
+                else if (e.touches && e.touches[0]) return e.touches[0].clientX;
+            }
+    
+            // Drag start event handler
+            function start(e) {
+               X = getClientX(e);
+               isDown = 1;
+            }
+            // Dragging event handler
+            function move(e){
+                e.preventDefault(); // prevent screen from moving on touch devices
+                if (isDown) {
+                    var clientX = getClientX(e);
+                    this.style.left = parseInt(this.style.left) + (clientX - X) + "px";
+                    X = clientX;
+                    var w = this.getBoundingClientRect().width / 2 + parseInt(this.style.left),
+                        h = this.getBoundingClientRect().height;
+                    this.nextElementSibling.style.clip = slider.getRect(w, h);
+                }
+            }
+            // initialize all events/handlers
+            var handlers = {
+                mouseup: resetDown,
+                mouseout: resetDown,
+                touchend: resetDown,
+                mousedown: start,
+                touchstart: start,
+                touchmove: move,
+                mousemove: move
+            };
+    
+            // Register all
+            Object.keys(handlers).forEach(function (event) {
+                slider.$dragger.addEventListener(event, handlers[event]);
+            });
+        },
+        initOnResize: function () {
+            var slider = this;
+            var handleResize = debounce(function() {
+                var moverWidth = slider.$dragger.getBoundingClientRect().width;
+                var imgLeft = slider.$dragger.nextElementSibling;
+                var width = slider.$imgLeft.getBoundingClientRect().width;
+                var height = slider.$imgLeft.getBoundingClientRect().height;
+                slider.$dragger.style.left = width / 2 - moverWidth / 2 + 'px';
+                slider.$imgLeft.style.clip = slider.getRect(width / 2, height);
+            }, 100);
+            var resizeTimer;
+            // handle browser resize with a debounce
+            window.addEventListener("resize", handleResize);
         }
-        // initialize all events/handlers
-        var handlers = {
-            mouseup: resetDown,
-            mouseout: resetDown,
-            touchend: resetDown,
-            mousedown: start,
-            touchstart: start,
-            touchmove: move,
-            mousemove: move
-        };
-
-        // Register all
-        Object.keys(handlers).forEach(function (event) {
-            slider.$dragger.addEventListener(event, handlers[event]);
-        });
     };
     
-    SliderPrototype.initOnResize = function () {
-        var slider = this;
-        var handleResize = debounce(function() {
-            var moverWidth = slider.$dragger.getBoundingClientRect().width;
-            var imgLeft = slider.$dragger.nextElementSibling;
-            var width = slider.$imgLeft.getBoundingClientRect().width;
-            var height = slider.$imgLeft.getBoundingClientRect().height;
-            slider.$dragger.style.left = width / 2 - moverWidth / 2 + 'px';
-            slider.$imgLeft.style.clip = slider.getRect(width / 2, height);
-        }, 100);
-        var resizeTimer;
-        // handle browser resize with a debounce
-        window.addEventListener("resize", handleResize);
-    };
+    // expose Slider. You can skip this or rename it to fit your project/namespace needs
     window.Slider = Slider;
 })();
