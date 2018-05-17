@@ -6,7 +6,7 @@ Found this: https://github.com/Paul-Browne/image-comparison-slider/blob/master/i
 But it needed a little more work to suite my need (optimization, responsiveness and support touch mobile devices)
 
 # Size
-This slider js is ~2KB minified (less gzipped), that is TINY! and the css is >1KB which is also insignificant.
+This slider js is ~1.5KB minified (less if gzipped), that is TINY! and the css is >1KB which is also insignificant.
 
 # How to use
 Clone this repo, and take a look at the example HTML in the example folder. should be straight-forward.
