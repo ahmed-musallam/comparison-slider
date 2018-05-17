@@ -1,0 +1,35 @@
+{
+  "name": "comparison-slider",
+  "version": "1.0.0",
+  "description": "A tiny, dependency-free, responsive comparison slider",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "minifyCss": "cleancss -o dist/comparison-slider.min.css src/comparison-slider.css",
+    "minifyJs": "uglifyjs src/comparison-slider.js -c -m -o dist/comparison-slider.min.js",
+    "start": "npm run minifyCss && npm run minifyJs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmed-musallam/comparison-slider.git"
+  },
+  "keywords": [
+    "slider",
+    "comparison-slider",
+    "comparison",
+    "before-after-slider"
+  ],
+  "author": "Ahmed Musallam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahmed-musallam/comparison-slider/issues"
+  },
+  "homepage": "https://github.com/ahmed-musallam/comparison-slider#readme",
+  "devDependencies": {
+    "clean-css-cli": "^4.1.11",
+    "uglify-js": "^3.3.25"
+  }
+}
