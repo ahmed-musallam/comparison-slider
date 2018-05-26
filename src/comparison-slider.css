@@ -37,25 +37,25 @@
 .ba-container .ba-mover:before,
 .ba-container .ba-mover:after {
   position: absolute;
-  left: 50%;
   content: "";
   background: #fff;
   cursor: ew-resize;
 }
 
 .ba-container .ba-mover:before {
+  left: calc(50% + 3px);
   top: 0;
   transform: translateX(-50%);
-  width: 5px;
+  width: 6px;
   height: 100%;
   background: #fff;
 }
 
 .ba-container .ba-mover:after {
+  left: calc(50% + 5px);
   position: absolute;
   top: 80%;
   width: 60px;
-  left: 50%;
   height: 60px;
   margin: -32px 0 0 -32px;
   content: '\027e8\00a0\027e9';
