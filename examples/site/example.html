@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="/dist/comparison-slider.min.css">
+</head>
+<body>
+
+<h1>Compare Images</h1>
+
+<div class="ba-container">
+    <div class="ba-mover"></div>
+    <img class="ba-img-left" src="/1.jpg">
+    <img class="ba-img-right" src="/2.jpg">
+</div>
+
+<!-- JS -->
+<script src="/dist/comparison-slider.min.js"></script>
+<script>
+    var bas = document.querySelectorAll('.ba-container');
+    Array.prototype.forEach.call(bas, function(el, i){
+            new window.Slider(el);
+    });
+</script>
+</body>
+</html>
+
