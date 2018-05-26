@@ -52,7 +52,7 @@
                 rect =  this.$container.getBoundingClientRect();
             // initialize slider and left image
             this.$dragger.style.left = rect.width / 2 - moverWidth / 2 + px;
-            this.$imgLeft.style.clip = this.getRect(rect.width / 2, rect.height);
+            this.$imgLeft.style.clip = this.getRect(rect.width / 2, 9999);
         },
         /**
          * Returns a rect css declaration from width and height
