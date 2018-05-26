@@ -1,4 +1,5 @@
 (function () {
+    var px = 'px';
     // simple debounce function based on: https://github.com/jgarber623/javascript-debounce
     function debounce (callback, delay) {
         var timeout;
@@ -19,17 +20,22 @@
      * @param {HTMLElement} sliderEl 
      */
     var Slider = function Slider(sliderEl) {
+
         // initialize dom elements
         this.$container = sliderEl;
         this.$dragger = this.$container.querySelector('.ba-mover');
-        this.$imgLeft = this.$dragger.nextElementSibling;
-        // calculate initial values
-        var width = this.$imgLeft.getBoundingClientRect().width;
-        var height = this.$imgLeft.getBoundingClientRect().height;
-        var moverWidth = this.$dragger.getBoundingClientRect().width;
+        this.$imgLeft = this.$container.querySelector('.ba-img-left');
+        this.$imgRight = this.$container.querySelector('.ba-img-right');
+
+        // make sure both images fit containers width
+        this.$imgLeft.style.width = '100%';
+        this.$imgRight.style.width = '100%';
+
+        var slider = this;
+
         // initialize slider and left image
-        this.$dragger.style.left = width / 2 - moverWidth / 2 + 'px';
-        this.$imgLeft.style.clip = this.getRect(width / 2, 999);
+        slider.resetSlider();
+
         // initialize event handlers
         this.initDraggerEvents();
         this.initOnResize();
@@ -39,12 +45,22 @@
     // Define prototype methods
     Slider.prototype  = {
         /**
+         * initialze slider location
+         */
+        resetSlider: function () {
+            var moverWidth = this.$dragger.getBoundingClientRect().width,
+                rect =  this.$container.getBoundingClientRect();
+            // initialize slider and left image
+            this.$dragger.style.left = rect.width / 2 - moverWidth / 2 + px;
+            this.$imgLeft.style.clip = this.getRect(rect.width / 2, rect.height);
+        },
+        /**
          * Returns a rect css declaration from width and height
          * @param {*} w width
          * @param {*} h height
          */
         getRect: function (w, h) {
-            return "rect(0px, " + w + "px, " + h + "px, 0px)";
+            return 'rect(0, ' + w + px+', ' + h + px +', 0)';
         },
         /**
          * Initialize dragging events for desktop and touch devices
@@ -73,7 +89,7 @@
                 e.preventDefault(); // prevent screen from moving on touch devices
                 if (isDown) {
                     var clientX = getClientX(e);
-                    this.style.left = parseInt(this.style.left) + (clientX - X) + "px";
+                    this.style.left = parseInt(this.style.left) + (clientX - X) + px;
                     X = clientX;
                     var w = this.getBoundingClientRect().width / 2 + parseInt(this.style.left),
                         h = this.getBoundingClientRect().height;
@@ -91,22 +107,25 @@
                 mousemove: move
             };
     
-            // Register all
+            // Attach all events
             Object.keys(handlers).forEach(function (event) {
                 slider.$dragger.addEventListener(event, handlers[event]);
             });
         },
         initOnResize: function () {
-            var slider = this;
+            var slider = this,
+                currentWindowWidth = window.outerWidth;
+            
+            // debounced resize handler
             var handleResize = debounce(function() {
-                var moverWidth = slider.$dragger.getBoundingClientRect().width;
-                var imgLeft = slider.$dragger.nextElementSibling;
-                var width = slider.$imgLeft.getBoundingClientRect().width;
-                var height = slider.$imgLeft.getBoundingClientRect().height;
-                slider.$dragger.style.left = width / 2 - moverWidth / 2 + 'px';
-                slider.$imgLeft.style.clip = slider.getRect(width / 2, height);
+                var newWindowWidth = window.outerWidth;
+                // only re-adjust slider is wiindow width changed
+                if(newWindowWidth!== currentWindowWidth){
+                    slider.resetSlider();
+                    currentWindowWidth = newWindowWidth;
+                }
             }, 100);
-            var resizeTimer;
+
             // handle browser resize with a debounce
             window.addEventListener("resize", handleResize);
         }
