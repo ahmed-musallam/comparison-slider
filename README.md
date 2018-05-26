@@ -18,5 +18,5 @@ But it needed a little more work to suite my need (optimization, responsiveness 
 Clone this repo, and take a look at the [example](/examples/example.html) HTML in the `examples` folder.
 
 
-# Build from source
+## Build from source
 `npm start` will run both the CSS and JS minifiers on the src folder. Results are outputted to the `dist` folder
